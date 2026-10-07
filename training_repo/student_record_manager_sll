@@ -1,0 +1,244 @@
+
+class Node:
+    def __init__(self, sid, name, marks):
+        self.sid = sid
+        self.name = name
+        self.marks = marks
+        self.next = None
+
+
+class sll:
+    def __init__(self):
+        self.head = None
+
+    # CHECK DUPLICATE STUDENT ID
+    def search_id(self, sid):
+        temp = self.head
+        pos = 1
+        while temp is not None:
+            if temp.sid == sid:
+                return pos
+            temp = temp.next
+            pos += 1
+        return -1
+
+    # INSERT AT BEGINNING
+    def insert_begin(self, sid, name, marks):
+        if self.search_id(sid) != -1:
+            print("Student ID already exists")
+            return
+        nn = Node(sid, name, marks)
+        nn.next = self.head
+        self.head = nn
+        print("Student registered successfully")
+
+    # INSERT AT END
+    def insert_end(self, sid, name, marks):
+        if self.search_id(sid) != -1:
+            print("Student ID already exists")
+            return
+        nn = Node(sid, name, marks)
+        if self.head is None:
+            self.head = nn
+            print("Student registered successfully")
+            return
+        temp = self.head
+        while temp.next is not None:
+            temp = temp.next
+        temp.next = nn
+        print("Student registered successfully")
+
+    # INSERT AT ANY POSITION
+    def insert_at_pos(self, sid, name, marks, pos):
+        if pos <= 0:
+            print("Invalid position")
+            return
+        if self.search_id(sid) != -1:
+            print("Student ID already exists")
+            return
+        if pos == 1:
+            self.insert_begin(sid, name, marks)
+            return
+        temp = self.head
+        i = 1
+        while i < pos - 1 and temp is not None:
+            temp = temp.next
+            i += 1
+        if temp is None:
+            print("Invalid position")
+            return
+        nn = Node(sid, name, marks)
+        nn.next = temp.next
+        temp.next = nn
+        print("Student registered successfully")
+
+    # DELETE USING STUDENT ID
+    def delete_id(self, sid):
+        if self.head is None:
+            print("List is empty")
+            return
+        if self.head.sid == sid:
+            self.head = self.head.next
+            print("Student deleted successfully")
+            return
+        temp = self.head
+        while temp.next is not None:
+            if temp.next.sid == sid:
+                temp.next = temp.next.next
+                print("Student deleted successfully")
+                return
+
+            temp = temp.next
+
+        print("Student ID not found")
+
+    # SEARCH USING STUDENT ID
+    def search(self, sid):
+        temp = self.head
+        pos = 1
+
+        while temp is not None:
+            if temp.sid == sid:
+                print("Student found")
+                print("ID:", temp.sid)
+                print("Name:", temp.name)
+                print("Marks:", temp.marks)
+                print("Position:", pos)
+                return
+
+            temp = temp.next
+            pos += 1
+
+        print("Student not found")
+
+    # DISPLAY ALL STUDENTS
+    def display(self):
+        if self.head is None:
+            print("List is empty")
+            return
+
+        temp = self.head
+
+        while temp is not None:
+            print("ID:", temp.sid,
+                  "Name:", temp.name,
+                  "Marks:", temp.marks)
+            temp = temp.next
+
+    # COUNT STUDENTS
+    def count(self):
+        temp = self.head
+        c = 0
+
+        while temp is not None:
+            c += 1
+            temp = temp.next
+
+        return c
+
+    # FIND HIGHEST MARKS
+    def highest_marks(self):
+        if self.head is None:
+            print("List is empty")
+            return
+
+        temp = self.head
+        max_marks = temp.marks
+
+        while temp is not None:
+            if temp.marks > max_marks:
+                max_marks = temp.marks
+            temp = temp.next
+
+        print("Student(s) with highest marks:")
+
+        temp = self.head
+
+        while temp is not None:
+            if temp.marks == max_marks:
+                print("ID:", temp.sid,
+                      "Name:", temp.name,
+                      "Marks:", temp.marks)
+            temp = temp.next
+
+    # REVERSE THE LIST
+    def reverse(self):
+        prev = None
+        current = self.head
+
+        while current is not None:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+
+        self.head = prev
+        print("Registration order reversed")
+
+
+# MAIN PROGRAM
+
+l = sll()
+
+while True:
+    print("\n----- STUDENT RECORD MANAGER -----")
+    print("1. Register student at beginning")
+    print("2. Register student at end")
+    print("3. Register student at specified position")
+    print("4. Remove student using ID")
+    print("5. Search student using ID")
+    print("6. Display all students")
+    print("7. Display total number of students")
+    print("8. Find student with highest marks")
+    print("9. Reverse registration order")
+    print("10. Exit")
+
+    choice = int(input("Enter your choice: "))
+
+    match choice:
+        case 1:
+            sid = int(input("Enter student ID: "))
+            name = input("Enter student name: ")
+            marks = float(input("Enter marks: "))
+            l.insert_begin(sid, name, marks)
+
+        case 2:
+            sid = int(input("Enter student ID: "))
+            name = input("Enter student name: ")
+            marks = float(input("Enter marks: "))
+            l.insert_end(sid, name, marks)
+
+        case 3:
+            sid = int(input("Enter student ID: "))
+            name = input("Enter student name: ")
+            marks = float(input("Enter marks: "))
+            pos = int(input("Enter position: "))
+            l.insert_at_pos(sid, name, marks, pos)
+
+        case 4:
+            sid = int(input("Enter student ID to delete: "))
+            l.delete_id(sid)
+
+        case 5:
+            sid = int(input("Enter student ID to search: "))
+            l.search(sid)
+
+        case 6:
+            l.display()
+
+        case 7:
+            print("Total students:", l.count())
+
+        case 8:
+            l.highest_marks()
+
+        case 9:
+            l.reverse()
+            l.display()
+
+        case 10:
+            print("Program ended")
+            break
+
+        case _:
+            print("Invalid choice")
